@@ -5,6 +5,12 @@ using System.Text.Json;
 using System.Windows.Forms;
 using System.IO;
 
+public enum NoteType
+{
+    Normal = 0,
+    Mine = 1,
+}
+
 public struct Song
 {
     public string Name { get; set; }
@@ -33,11 +39,11 @@ public struct Note
     public int Type { get; set; }
     public int Lane { get; set; }
 
-    public Note(float offset, int lane, int type, float length = 0f)
+    public Note(float offset, int lane, NoteType type, float length = 0f)
     {
         Offset = offset;
         Lane = lane;
-        Type = type;
+        Type = (int)type;
         Length = length;
     }
 }
@@ -250,7 +256,7 @@ namespace Rhythm4kConverter
                                     switch(line[i])
                                     {
                                         case '1':
-                                            chart.Notes.Add(new Note(time, i, 0));
+                                            chart.Notes.Add(new Note(time, i, NoteType.Normal));
                                             break;
                                         case '2':
                                             holding[i] = time;
@@ -261,6 +267,9 @@ namespace Rhythm4kConverter
                                                 chart.Notes.Add(new Note(holding[i], i, 0, time - holding[i]));
                                                 holding[i] = -1;
                                             }
+                                            break;
+                                        case 'M':
+                                            chart.Notes.Add(new Note(time, i, NoteType.Mine));
                                             break;
                                     }
                                 }
