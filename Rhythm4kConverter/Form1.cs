@@ -380,5 +380,40 @@ namespace Rhythm4kConverter
                 File.WriteAllText(saveFileDialog.FileName, jsonString);
             }
         }
+
+        private void txtSongTitle_TextChanged(object sender, EventArgs e)
+        {
+            LoadedSong.Name = txtSongTitle.Text;
+        }
+
+        private void txtSongArtist_TextChanged(object sender, EventArgs e)
+        {
+            LoadedSong.Artist = txtSongArtist.Text;
+        }
+
+        private void txtSongFile_TextChanged(object sender, EventArgs e)
+        {
+            LoadedSong.Sound = txtSongFile.Text;
+        }
+
+        private void txtSongOffset_TextChanged(object sender, EventArgs e)
+        {
+            LoadedSong.Offset = float.Parse(txtSongOffset.Text);
+        }
+
+        private void txtSampleStart_TextChanged(object sender, EventArgs e)
+        {
+            LoadedSong.SampleStart = float.Parse(txtSampleStart.Text);
+        }
+
+        private void txtSampleLength_TextChanged(object sender, EventArgs e)
+        {
+            LoadedSong.SampleLength = float.Parse(txtSampleLength.Text);
+        }
+
+        private void txtMainBPM_TextChanged(object sender, EventArgs e)
+        {
+            LoadedSong.BPM = float.Parse(txtMainBPM.Text);
+        }
     }
 }

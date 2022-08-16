@@ -109,6 +109,7 @@
             this.txtMainBPM.Name = "txtMainBPM";
             this.txtMainBPM.Size = new System.Drawing.Size(192, 20);
             this.txtMainBPM.TabIndex = 1;
+            this.txtMainBPM.TextChanged += new System.EventHandler(this.txtMainBPM_TextChanged);
             // 
             // label7
             // 
@@ -126,6 +127,7 @@
             this.txtSampleLength.Name = "txtSampleLength";
             this.txtSampleLength.Size = new System.Drawing.Size(192, 20);
             this.txtSampleLength.TabIndex = 1;
+            this.txtSampleLength.TextChanged += new System.EventHandler(this.txtSampleLength_TextChanged);
             // 
             // label6
             // 
@@ -143,6 +145,7 @@
             this.txtSampleStart.Name = "txtSampleStart";
             this.txtSampleStart.Size = new System.Drawing.Size(192, 20);
             this.txtSampleStart.TabIndex = 1;
+            this.txtSampleStart.TextChanged += new System.EventHandler(this.txtSampleStart_TextChanged);
             // 
             // label5
             // 
@@ -160,6 +163,7 @@
             this.txtSongOffset.Name = "txtSongOffset";
             this.txtSongOffset.Size = new System.Drawing.Size(192, 20);
             this.txtSongOffset.TabIndex = 1;
+            this.txtSongOffset.TextChanged += new System.EventHandler(this.txtSongOffset_TextChanged);
             // 
             // label4
             // 
@@ -177,6 +181,7 @@
             this.txtSongFile.Name = "txtSongFile";
             this.txtSongFile.Size = new System.Drawing.Size(192, 20);
             this.txtSongFile.TabIndex = 1;
+            this.txtSongFile.TextChanged += new System.EventHandler(this.txtSongFile_TextChanged);
             // 
             // label3
             // 
@@ -194,6 +199,7 @@
             this.txtSongArtist.Name = "txtSongArtist";
             this.txtSongArtist.Size = new System.Drawing.Size(192, 20);
             this.txtSongArtist.TabIndex = 1;
+            this.txtSongArtist.TextChanged += new System.EventHandler(this.txtSongArtist_TextChanged);
             // 
             // label2
             // 
@@ -211,6 +217,7 @@
             this.txtSongTitle.Name = "txtSongTitle";
             this.txtSongTitle.Size = new System.Drawing.Size(192, 20);
             this.txtSongTitle.TabIndex = 1;
+            this.txtSongTitle.TextChanged += new System.EventHandler(this.txtSongTitle_TextChanged);
             // 
             // label1
             // 
