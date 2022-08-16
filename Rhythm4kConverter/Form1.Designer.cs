@@ -56,9 +56,15 @@
             this.numDifficulty = new System.Windows.Forms.NumericUpDown();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblChartInfo = new System.Windows.Forms.Label();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolSaveR4K = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolNew = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numDifficulty)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblDragToStart
@@ -68,7 +74,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblDragToStart.Location = new System.Drawing.Point(12, 160);
             this.lblDragToStart.Name = "lblDragToStart";
-            this.lblDragToStart.Size = new System.Drawing.Size(360, 58);
+            this.lblDragToStart.Size = new System.Drawing.Size(360, 78);
             this.lblDragToStart.TabIndex = 0;
             this.lblDragToStart.Text = "Drag a chart file here";
             this.lblDragToStart.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -91,7 +97,7 @@
             this.pnlSettings.Controls.Add(this.label2);
             this.pnlSettings.Controls.Add(this.txtSongTitle);
             this.pnlSettings.Controls.Add(this.label1);
-            this.pnlSettings.Location = new System.Drawing.Point(12, 12);
+            this.pnlSettings.Location = new System.Drawing.Point(12, 32);
             this.pnlSettings.Name = "pnlSettings";
             this.pnlSettings.Size = new System.Drawing.Size(360, 364);
             this.pnlSettings.TabIndex = 1;
@@ -237,6 +243,7 @@
             this.btnSave.TabIndex = 4;
             this.btnSave.Text = "Export .r4k";
             this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // label9
             // 
@@ -317,16 +324,59 @@
             this.lblChartInfo.Text = "123 Notes | 0 BPM Changes";
             this.lblChartInfo.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(384, 24);
+            this.menuStrip1.TabIndex = 2;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolNew,
+            this.toolOpen,
+            this.toolSaveR4K});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // toolOpen
+            // 
+            this.toolOpen.Name = "toolOpen";
+            this.toolOpen.Size = new System.Drawing.Size(180, 22);
+            this.toolOpen.Text = "Open";
+            this.toolOpen.Click += new System.EventHandler(this.toolOpen_Click);
+            // 
+            // toolSaveR4K
+            // 
+            this.toolSaveR4K.Enabled = false;
+            this.toolSaveR4K.Name = "toolSaveR4K";
+            this.toolSaveR4K.Size = new System.Drawing.Size(180, 22);
+            this.toolSaveR4K.Text = "Export .r4k";
+            this.toolSaveR4K.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // toolNew
+            // 
+            this.toolNew.Name = "toolNew";
+            this.toolNew.Size = new System.Drawing.Size(180, 22);
+            this.toolNew.Text = "New";
+            this.toolNew.Click += new System.EventHandler(this.toolNew_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(384, 381);
+            this.ClientSize = new System.Drawing.Size(384, 401);
             this.Controls.Add(this.pnlSettings);
             this.Controls.Add(this.lblDragToStart);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(400, 420);
-            this.MinimumSize = new System.Drawing.Size(400, 420);
+            this.MinimumSize = new System.Drawing.Size(400, 440);
             this.Name = "Form1";
             this.Text = "Rhythm4K Converter";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -335,7 +385,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.numDifficulty)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -368,6 +421,11 @@
         private System.Windows.Forms.NumericUpDown numDifficulty;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label lblChartInfo;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolNew;
+        private System.Windows.Forms.ToolStripMenuItem toolOpen;
+        private System.Windows.Forms.ToolStripMenuItem toolSaveR4K;
     }
 }
 

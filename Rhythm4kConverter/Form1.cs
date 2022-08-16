@@ -1,48 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using System.Text.Json;
 using System.Windows.Forms;
 using System.IO;
 
 public struct Song
 {
-    public string Name;
-    public string Artist;
-    public string Sound;
-    public float Offset;
-    public float SampleStart;
-    public float SampleLength;
-    public float BPM;
-    public List<Chart> Charts;
+    public string Name { get; set; }
+    public string Artist { get; set; }
+    public string Sound { get; set; }
+    public float Offset { get; set; }
+    public float SampleStart { get; set; }
+    public float SampleLength { get; set; }
+    public float BPM { get; set; }
+    public List<Chart> Charts { get; set; }
 }
 
 public struct Chart
 {
-    public string Name;
-    public string CharterName;
-    public int Difficulty;
-    public List<BpmChange> BpmChanges;
-    public List<Note> Notes;
+    public string Name { get; set; }
+    public string CharterName { get; set; }
+    public int Difficulty { get; set; }
+    public List<BpmChange> BpmChanges { get; set; }
+    public List<Note> Notes { get; set; }
 }
 
 public struct Note
 {
-    public float Offset;
-    public float Length;
-    public int Type;
-    public int Lane;
+    public float Offset { get; set; }
+    public float Length { get; set; }
+    public int Type { get; set; }
+    public int Lane { get; set; }
+
+    public Note(float offset, int lane, int type, float length = 0f)
+    {
+        Offset = offset;
+        Lane = lane;
+        Type = type;
+        Length = length;
+    }
 }
 
 public struct BpmChange
 {
-    public float Offset;
-    public float BPM;
+    public float Offset { get; set; }
+    public float BPM { get; set; }
 
     public BpmChange(float offset, float bpm)
     {
@@ -76,26 +79,7 @@ namespace Rhythm4kConverter
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             if (files.Length > 0)
             {
-                LoadedSong = LoadSong(files[0]);
-
-                txtSongTitle.Text = LoadedSong.Name;
-                txtSongArtist.Text = LoadedSong.Artist;
-                txtSongFile.Text = LoadedSong.Sound;
-                txtSongOffset.Text = LoadedSong.Offset.ToString();
-                txtSampleStart.Text = LoadedSong.SampleStart.ToString();
-                txtSampleLength.Text = LoadedSong.SampleLength.ToString();
-                txtMainBPM.Text = LoadedSong.BPM.ToString();
-
-                listCharts.Items.Clear();
-                foreach(var chart in LoadedSong.Charts)
-                {
-                    listCharts.Items.Add($"{chart.Name} ({chart.Difficulty})");
-                }
-
-                SelectChart();
-
-                lblDragToStart.Visible = false;
-                pnlSettings.Visible = true;
+                LoadSong(files[0]);
             }
         }
 
@@ -120,15 +104,45 @@ namespace Rhythm4kConverter
 
         }
 
-        private Song LoadSong(string file)
+        private void LoadSong(string file)
         {
+            bool success = true;
+            LoadedSong = new Song();
             SelectedChart = 0;
+
             switch (Path.GetExtension(file))
             {
                 case ".sm":
-                    return SMtoChart(file);
+                    LoadedSong = SMtoChart(file);
+                    break;
+                default:
+                    success = false;
+                    break;
             }
-            return new Song();
+
+            if (success)
+            {
+                lblDragToStart.Visible = false;
+                pnlSettings.Visible = true;
+
+                toolSaveR4K.Enabled = true;
+
+                txtSongTitle.Text = LoadedSong.Name;
+                txtSongArtist.Text = LoadedSong.Artist;
+                txtSongFile.Text = LoadedSong.Sound;
+                txtSongOffset.Text = LoadedSong.Offset.ToString();
+                txtSampleStart.Text = LoadedSong.SampleStart.ToString();
+                txtSampleLength.Text = LoadedSong.SampleLength.ToString();
+                txtMainBPM.Text = LoadedSong.BPM.ToString();
+
+                listCharts.Items.Clear();
+                foreach (var chart in LoadedSong.Charts)
+                {
+                    listCharts.Items.Add($"{chart.Name} ({chart.Difficulty})");
+                }
+
+                SelectChart();
+            }
         }
 
         private Song SMtoChart(string file)
@@ -205,8 +219,7 @@ namespace Rhythm4kConverter
                     // If the chart is a valid single player chart
                     if(noteSplit[1].Contains("-single:"))
                     {
-                        bool[] holding = new bool[4];
-                        float[] holdingTime = new float[4];
+                        float[] holding = { -1, -1, -1, -1 };
                         Chart chart = new Chart();
                         chart.Notes = new List<Note>();
                         chart.BpmChanges = bpmChanges;
@@ -221,22 +234,39 @@ namespace Rhythm4kConverter
 
                         // Re-split into arrays that contain each measure
                         noteSplit = Regex.Split(value, "\\,");
+                        int measure = 0;
                         foreach(string note in noteSplit)
                         {
                             var lines = note.Trim().Split('\n');
                             var division = 1f / (lines.Length == 96 ? 192 : lines.Length);
+                            int beat = 0;
+
+                            // Loop through each line in the measure
                             foreach(var line in lines)
                             {
-                                for(int i=0; i < 4; i++)
+                                float time = (measure * 1000f) + (beat * division * 1000f);
+                                for (int i=0; i < 4; i++)
                                 {
                                     switch(line[i])
                                     {
                                         case '1':
-                                            
+                                            chart.Notes.Add(new Note(time, i, 0));
+                                            break;
+                                        case '2':
+                                            holding[i] = time;
+                                            break;
+                                        case '3':
+                                            if(holding[i] != -1)
+                                            {
+                                                chart.Notes.Add(new Note(holding[i], i, 0, time - holding[i]));
+                                                holding[i] = -1;
+                                            }
                                             break;
                                     }
                                 }
+                                beat++;
                             }
+                            measure++;
                         }
                         
                         song.Charts.Add(chart);
@@ -300,6 +330,46 @@ namespace Rhythm4kConverter
         {
             listCharts.Items.RemoveAt(i);
             listCharts.Items.Insert(i, $"{chart.Name} ({chart.Difficulty})");
+        }
+
+        private void toolNew_Click(object sender, EventArgs e)
+        {
+            lblDragToStart.Visible = true;
+            pnlSettings.Visible = false;
+
+            toolSaveR4K.Enabled = false;
+        }
+
+        private void toolOpen_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "Stepmania charts (*.sm)|*.sm|All files (*.*)|*.*";
+                ofd.RestoreDirectory = true;
+
+                if(ofd.ShowDialog() == DialogResult.OK)
+                {
+                    LoadSong(ofd.FileName);
+                    return;
+                }
+            }
+        }
+
+        // Export .r4k file
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            string jsonString = JsonSerializer.Serialize(LoadedSong);
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Rhythm4K Chart|*.r4k";
+            saveFileDialog.Title = "Save chart file";
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.ShowDialog();
+
+            if(saveFileDialog.FileName != "")
+            {
+                File.WriteAllText(saveFileDialog.FileName, jsonString);
+            }
         }
     }
 }
